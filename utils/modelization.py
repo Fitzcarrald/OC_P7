@@ -12,10 +12,9 @@ from sklearn.model_selection import cross_validate
 from sklearn.metrics import classification_report, make_scorer
 
 from sklearn.metrics import classification_report
-# from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay,\
-    PrecisionRecallDisplay,\
-    RocCurveDisplay
+                            PrecisionRecallDisplay,\
+                            RocCurveDisplay
 from sklearn.metrics import fbeta_score, roc_auc_score
 
 import pickle
@@ -35,24 +34,6 @@ def timer(title):
     t0 = time.time()
     yield
     print(f'{title} - done in {time.time() - t0:.0f}s')
-
-
-# # Loan repayment metric
-# def loan_repayment_score(y_true, y_pred, a=1, b=-1, c=-5, d=0):
-#     (tn, fp, fn, tp) = confusion_matrix(y_true, y_pred).ravel()
-
-#     assert (abs(c) > abs(b) >= abs(a) > abs(d)),\
-#         'The four coefficients of the functional must satisfy |c| > |b| >= |a| > |d|.'
-
-#     gain_tot = abs(a)*tn - abs(b)*fp - abs(c)*fn + abs(d)*tp
-#     gain_max = (tn + fp)*abs(a) + (fn + tp)*abs(d)
-#     gain_min = -(tn + fp)*abs(b) - (fn + tp)*abs(c)
-
-#     return (gain_tot - gain_min) / (gain_max - gain_min)
-
-
-# # Define scorer from the loan repayment score
-# loan_repayment_scorer = make_scorer(loan_repayment_score)
 
 
 # Define scorer from the fbeta score

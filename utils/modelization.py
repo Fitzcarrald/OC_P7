@@ -48,8 +48,7 @@ def cv_scorer(
     methods=['none', 'undersampling', 'oversampling', 'balanced']
 ):
     cv_results = pd.DataFrame(
-        columns=[
-            'balancing',
+        columns=[            
             'train_ROC_AUC_mean_score',
             'test_ROC_AUC_score',
             'train_Fbeta_score',
@@ -63,7 +62,7 @@ def cv_scorer(
         'Fbeta_score': fbeta_scorer
     }
 
-    for i, method in enumerate(tqdm(methods)):
+    for method in tqdm(methods):
         model = kernel['model']
 
         if method == 'none':
@@ -101,8 +100,7 @@ def cv_scorer(
             # Make the predictions
             y_pred = model.predict(X_test_prep)
             # Store the scores
-            cv_results.loc[i] = [
-                method,
+            cv_results.loc[method] = [                
                 np.mean(cross_val_scores['test_ROC_AUC_score']),
                 roc_auc_score(y_test, y_pred),
                 np.mean(cross_val_scores['test_Fbeta_score']),

@@ -7,14 +7,12 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import SMOTE
 
 from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import cross_validate
+from sklearn.model_selection import cross_val_score, cross_validate
 
 from sklearn.metrics import classification_report, make_scorer
 
 from sklearn.metrics import classification_report
-from sklearn.metrics import ConfusionMatrixDisplay,\
-                            PrecisionRecallDisplay,\
-                            RocCurveDisplay
+from sklearn.metrics import ConfusionMatrixDisplay, PrecisionRecallDisplay, RocCurveDisplay
 from sklearn.metrics import fbeta_score, roc_auc_score
 
 import pickle
@@ -148,3 +146,24 @@ def cv_scorer(
     cv_results.to_csv(kernel['cv_results_path'], index=False)
 
     return cv_results
+
+# def objective(model, params, X_train, y_train, n_folds=10):
+#     scoring = {
+#         'ROC_AUC_score': 'roc_auc',
+#         'Fbeta_score': fbeta_scorer
+#     }
+#     model.set_params(**params)
+#     cross_val_scores = cross_validate(
+#         model,
+#         X_train,
+#         y_train,
+#         cv=StratifiedKFold(n_splits=n_folds),
+#         scoring=scoring,
+#         error_score='raise'    
+#     )
+#     best_roc_auc = max(cross_val_scores['test_ROC_AUC_score'])
+#     best_fbeta = max(cross_val_scores['test_Fbeta_score'])
+
+#     loss = (1 - best_roc_auc) * (1 - best_fbeta)
+
+#     return {'loss': loss, 'params': params, 'status': STATUS_OK}

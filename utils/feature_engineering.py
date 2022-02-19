@@ -104,8 +104,13 @@ def application_train_test():
         )
     )
     df = df_train.append(df_test).reset_index(drop=True)
-    # Drop any flag column
-    df = df.filter(regex='^(?!FLAG)')
+    # # Drop any flag column
+    # df = df.filter(regex='^(?!FLAG)')
+    # Make sure tha any flag column is a categorical one    
+    for col in df.filter(like='FLAG').select_dtypes(exclude='object').columns:
+        # Due to a bug of the in place argument of replace this operation had
+        # to be done column-wise
+        df[col].replace({0: 'Y', 1: 'N'}, inplace=True)
     # Remove 4 applications with XNA CODE_GENDER (train set)
     df = df[df['CODE_GENDER'].ne('XNA')]
     # Set to NaN the identified outliers
@@ -122,9 +127,9 @@ def application_train_test():
     # digit, or underscore with an underscore
     df[df.select_dtypes('object').columns] = df.select_dtypes('object').replace(
         regex='[\W]', value=' ').replace(regex='\s+', value='_')
-    # Add the APP prefix to the column names, except to TARGET and the identifier
-    df.columns = [col if col in ['SK_ID_CURR', 'TARGET']
-                  else 'APP_' + col for col in df.columns]
+    # # Add the APP prefix to the column names, except to TARGET and the identifier
+    # df.columns = [col if col in ['SK_ID_CURR', 'TARGET']
+    #               else 'APP_' + col for col in df.columns]
     del df_train, df_test
     gc.collect()
 
@@ -217,8 +222,8 @@ def previous_application():
             'data/previous_application.csv'
         )
     )
-    # Drop any flag column
-    prev_app = prev_app.filter(regex='^(?!FLAG)')
+    # # Drop any flag column
+    # prev_app = prev_app.filter(regex='^(?!FLAG)')
     # Set to NaN the identified outliers
     prev_app['DAYS_FIRST_DRAWING'].replace(
         365243, np.nan, inplace=True)
@@ -388,6 +393,6 @@ def home_credit_dataframe():
         )
         del cred_card
         gc.collect()
-    df.drop(columns='SK_ID_CURR', inplace=True)
+    # df.drop(columns='SK_ID_CURR', inplace=True)    
 
     return reduce_memory_usage(df)
